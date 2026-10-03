@@ -13,8 +13,8 @@
     <div class="login-card">
       <div class="brand">TRAIT D'ÉPICE<small>ADMINISTRATION</small></div>
       <h1>Connexion</h1>
-      <p class="muted">Gère les épices, familles et contenus sans toucher au code.</p>
-      <div id="configNotice" class="notice hidden">Supabase n'est pas encore relié. Renseigne l'URL du projet et la clé publishable dans <code>assets/js/supabase-config.js</code>.</div>
+      <p class="muted">Gère les épices, familles et demandes sans toucher au code.</p>
+      <div id="configNotice" class="notice hidden">Supabase n'est pas encore relié.</div>
       <form id="loginForm">
         <label>Email<input id="email" type="email" autocomplete="username" required></label>
         <label>Mot de passe<input id="password" type="password" autocomplete="current-password" required></label>
@@ -46,7 +46,7 @@
           <div class="card"><div class="muted">Nouvelles demandes</div><div id="metricMessages" class="metric">0</div></div>
           <div class="card"><div class="muted">Sans photo</div><div id="metricMissingImages" class="metric">0</div></div>
         </div>
-        <div class="panel"><h2>Bienvenue</h2><p class="muted">Cette première version admin gère déjà les épices et les familles. Les présentoirs, recettes, catalogue, pages et médias seront ajoutés sur la même base.</p></div>
+        <div class="panel"><h2>Administration connectée</h2><p class="muted">Les épices et familles sont maintenant lues directement depuis Supabase. Les photos envoyées ici sont stockées dans Supabase Storage.</p></div>
       </section>
 
       <section id="section-spices" class="section hidden">
@@ -58,13 +58,16 @@
 
       <section id="section-families" class="section hidden">
         <div class="panel">
-          <div class="toolbar"><div class="muted">Les familles sont désormais dynamiques.</div><button class="btn btn-primary" onclick="newFamily()">+ Ajouter une famille</button></div>
+          <div class="toolbar"><div class="muted">Les familles sont dynamiques : renommer une famille met à jour toutes ses épices liées.</div><button class="btn btn-primary" onclick="newFamily()">+ Ajouter une famille</button></div>
           <table class="table"><thead><tr><th>Nom</th><th>Slug</th><th>Ordre</th><th>Statut</th><th></th></tr></thead><tbody id="familyRows"></tbody></table>
         </div>
       </section>
 
       <section id="section-messages" class="section hidden">
-        <div class="panel"><h2>Demandes clients</h2><p class="muted">La table sécurisée est déjà prête dans Supabase. L'écran complet et le véritable envoi email seront branchés lors de l'étape formulaire.</p></div>
+        <div class="panel">
+          <div class="toolbar"><div class="muted">Messages envoyés depuis le formulaire public.</div><button class="btn btn-secondary" onclick="refreshAll()">Actualiser</button></div>
+          <table class="table"><thead><tr><th>Date</th><th>Contact</th><th>Sujet</th><th>Statut</th><th></th></tr></thead><tbody id="messageRows"></tbody></table>
+        </div>
       </section>
     </main>
   </section>
@@ -74,10 +77,12 @@
     <label>Nom<input id="spiceName" required></label><label>Slug<input id="spiceSlug" required></label>
     <label>Famille<select id="spiceFamily"></select></label><label>Origine<input id="spiceOrigin"></label>
     <label class="full">Description<textarea id="spiceDescription" rows="5"></textarea></label>
-    <label class="full">URL de la photo<input id="spiceImage" type="url" placeholder="https://…"></label>
+    <label class="full">Photo actuelle / URL<input id="spiceImage" type="url" placeholder="https://…"></label>
+    <label class="full">Importer une nouvelle photo<input id="spiceImageFile" type="file" accept="image/jpeg,image/png,image/webp"><small class="muted">JPG, PNG ou WebP — 5 Mo maximum.</small></label>
+    <div class="full"><img id="spicePreview" alt="Aperçu" style="display:none;max-width:180px;max-height:180px;object-fit:cover;border-radius:12px"></div>
     <label>Couleur sans photo<input id="spiceColor" type="color" value="#C9A66B"></label>
     <label style="display:flex;align-items:center;gap:8px;margin-top:25px"><input id="spicePublished" type="checkbox" style="width:auto"> Publié sur le site</label>
-    <div class="full"><button class="btn btn-primary" type="submit">Enregistrer</button></div>
+    <div class="full"><button id="spiceSaveButton" class="btn btn-primary" type="submit">Enregistrer</button></div>
   </form></div></div>
 
   <div id="familyModal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h2>Famille</h2><button class="btn btn-secondary" onclick="closeModal('#familyModal')">Fermer</button></div><form id="familyForm" class="form-grid">
@@ -89,7 +94,11 @@
     <div class="full"><button class="btn btn-primary" type="submit">Enregistrer</button></div>
   </form></div></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <div id="messageModal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h2>Demande client</h2><button class="btn btn-secondary" onclick="closeModal('#messageModal')">Fermer</button></div>
+    <div id="messageDetail"></div>
+  </div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
   <script src="../assets/js/supabase-config.js"></script>
   <script src="app.js"></script>
 </body>
