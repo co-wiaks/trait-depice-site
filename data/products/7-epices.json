@@ -1,12 +1,9 @@
 {
+  "dot": "#C9862A",
   "nom": "7 épices",
   "famille": "Mélanges",
-  "origine": "",
-  "description": "Un mélange d'épices équilibré, prêt à l'emploi pour relever vos recettes.",
-  "image": "",
-  "dot": "#C9862A",
-  "halal": false,
-  "kasher": false,
+  "kasher": true,
+  "image": "/assets/img/produits/quatres-épices_100g.png",
   "profil": [],
   "formats": [
     {
@@ -22,5 +19,8 @@
     {
       "poids": "1 kg"
     }
-  ]
+  ],
+  "description": "Un mélange d'épices équilibré, prêt à l'emploi pour relever vos recettes.",
+  "halal": true,
+  "origine": "ESPAGNE"
 }
