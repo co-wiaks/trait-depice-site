@@ -1,0 +1,26 @@
+{
+  "nom": "Ras el hanout jaune",
+  "famille": "Mélanges",
+  "origine": "",
+  "description": "Un mélange d'épices équilibré, prêt à l'emploi pour relever vos recettes.",
+  "image": "",
+  "dot": "#C9862A",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

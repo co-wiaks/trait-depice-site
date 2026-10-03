@@ -1,0 +1,53 @@
+<meta name="description" content="Contactez Trait d'Épice — questions, commandes, devis professionnels et points de vente.">
+
+<section class="section tight" style="padding-bottom:36px;">
+  <div class="container">
+    <span class="eyebrow">Contact</span>
+    <h1 style="font-size:42px;margin-top:10px;">Parlons-en</h1>
+    <p style="margin-top:14px;font-size:14px;color:var(--gray);max-width:560px;">Une question sur nos épices, une commande, une demande professionnelle&nbsp;? Écrivez-nous, nous revenons vers vous sous 48h.</p>
+  </div>
+</section>
+
+<section class="section" style="background:var(--ink);">
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow on-dark">Formulaire</span>
+    <form class="form-grid dark-form" style="margin-top:22px;" data-mailto="{{EMAIL}}" data-subject="Message depuis le site — Trait d'Épice">
+      <div class="field">
+        <label for="c-etablissement">Établissement</label>
+        <input id="c-etablissement" name="Établissement" type="text" placeholder="Nom (facultatif pour un particulier)">
+      </div>
+      <div class="field">
+        <label for="c-type">Type d'activité</label>
+        <select id="c-type" name="Type d'activité">
+          <option>Particulier</option>
+          <option>Restaurant</option>
+          <option>Épicerie fine</option>
+          <option>Grossiste</option>
+          <option>Distributeur</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="c-email">E-mail</label>
+        <input id="c-email" name="E-mail" type="email" placeholder="vous@exemple.fr" required>
+      </div>
+      <div class="field">
+        <label for="c-tel">Téléphone</label>
+        <input id="c-tel" name="Téléphone" type="tel" placeholder="06 00 00 00 00">
+      </div>
+      <div class="field full">
+        <label for="c-sujet">Sujet</label>
+        <input id="c-sujet" name="Sujet" type="text" placeholder="Objet du message">
+      </div>
+      <div class="field full">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" name="Message" rows="5" placeholder="Votre message" required></textarea>
+      </div>
+      <div class="field full">
+        <button type="submit" class="btn btn-gold" style="width:fit-content;">Envoyer</button>
+        <p class="form-status"></p>
+        <p class="form-note" style="color:#B9B2A7;">En V1, l'envoi ouvre votre messagerie avec le message pré-rempli.</p>
+      </div>
+    </form>
+  </div>
+</section>

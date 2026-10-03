@@ -1,0 +1,26 @@
+{
+  "nom": "Herbes pour pizza",
+  "famille": "Herbes",
+  "origine": "",
+  "description": "Une herbe aromatique séchée avec soin, pour parfumer vos plats au quotidien.",
+  "image": "",
+  "dot": "#6E7A4A",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

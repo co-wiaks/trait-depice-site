@@ -1,0 +1,26 @@
+{
+  "nom": "Piment de Cayenne moulu",
+  "famille": "Piments",
+  "origine": "",
+  "description": "Un piment ou paprika sélectionné pour son caractère, à doser selon l'intensité recherchée.",
+  "image": "",
+  "dot": "#C24632",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

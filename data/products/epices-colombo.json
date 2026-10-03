@@ -1,0 +1,40 @@
+{
+  "slug": "epices-colombo",
+  "nom": "Épices Colombo",
+  "famille": "Mélanges",
+  "familleSlug": "melanges",
+  "origine": "Antilles",
+  "bg": "#F5E7D3",
+  "dot": "#D9A441",
+  "nouveau": true,
+  "description": "Le mélange antillais traditionnel, chaud et parfumé, pour sublimer viandes, poissons et légumes façon colombo.",
+  "profil": [
+    {
+      "label": "Intensité moyenne"
+    },
+    {
+      "label": "Chaud, parfumé"
+    },
+    {
+      "label": "Origine Antilles"
+    }
+  ],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ],
+  "image": "",
+  "halal": false,
+  "kasher": false
+}

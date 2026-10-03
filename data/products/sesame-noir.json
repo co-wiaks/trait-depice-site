@@ -1,0 +1,26 @@
+{
+  "nom": "Sésame noir",
+  "famille": "Graines",
+  "origine": "",
+  "description": "Une graine ou céréale sélectionnée pour sa fraîcheur et sa texture.",
+  "image": "",
+  "dot": "#B9A96A",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

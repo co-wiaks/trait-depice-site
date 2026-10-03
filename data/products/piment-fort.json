@@ -1,0 +1,40 @@
+{
+  "slug": "piment-fort",
+  "nom": "Piment Fort",
+  "famille": "Piments",
+  "familleSlug": "piments",
+  "origine": "Espagne",
+  "bg": "#F3E3DE",
+  "dot": "#B5372A",
+  "nouveau": true,
+  "description": "Un piment fort d'origine espagnole, moulu finement pour révéler ses arômes chauds et légèrement fumés. Idéal pour relever marinades, sauces et plats mijotés.",
+  "profil": [
+    {
+      "label": "Intensité forte"
+    },
+    {
+      "label": "Fumé, chaud"
+    },
+    {
+      "label": "Origine Espagne"
+    }
+  ],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ],
+  "image": "",
+  "halal": false,
+  "kasher": false
+}

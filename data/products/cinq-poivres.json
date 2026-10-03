@@ -1,0 +1,26 @@
+{
+  "nom": "Cinq poivres",
+  "famille": "Poivres",
+  "origine": "",
+  "description": "Un poivre choisi pour sa force aromatique, à utiliser moulu ou en grains selon vos préparations.",
+  "image": "",
+  "dot": "#D8CFC0",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

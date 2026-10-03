@@ -1,0 +1,84 @@
+# Configuration de l'espace d'administration (Decap CMS).
+# Ce fichier définit le formulaire que vous voyez sur /admin — vous n'avez
+# normalement jamais besoin d'y toucher vous-même. Si vous voulez qu'une
+# nouvelle famille d'épices apparaisse dans le menu déroulant, ajoutez-la
+# dans la liste "options" ci-dessous (section "famille").
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Où les photos uploadées depuis /admin sont rangées, et comment elles sont
+# ensuite référencées par le site (assets/img/produits/mon-fichier.jpg).
+media_folder: "assets/img/produits"
+public_folder: "/assets/img/produits"
+
+locale: "fr"
+
+collections:
+  - name: "produits"
+    label: "Épices"
+    label_singular: "épice"
+    folder: "data/products"
+    extension: "json"
+    format: "json"
+    create: true
+    delete: true
+    identifier_field: nom
+    slug: "{{slug}}"
+    summary: "{{nom}} — {{famille}}"
+    sortable_fields: ["nom", "famille"]
+    fields:
+      - { label: "Nom de l'épice", name: "nom", widget: "string" }
+      - label: "Famille"
+        name: "famille"
+        widget: "select"
+        options:
+          - "Piments"
+          - "Poivres"
+          - "Mélanges"
+          - "Herbes"
+          - "Épices douces"
+          - "Graines"
+          - "Ail et oignons"
+          - "Fleurs et plantes"
+          - "Sel & Condiments"
+      - { label: "Origine", name: "origine", widget: "string", hint: "Ex : Espagne, Maroc, Sri Lanka..." }
+      - { label: "Nouveau produit", name: "nouveau", widget: "boolean", default: false, required: false, hint: "Affiche le badge « Nouveau » sur la fiche" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Photo", name: "image", widget: "image", required: false, hint: "Tant qu'il n'y a pas de photo, une pastille de couleur est affichée à la place" }
+      - { label: "Couleur (si pas encore de photo)", name: "dot", widget: "color", required: false, default: "#C9A66B" }
+      - { label: "Halal", name: "halal", widget: "boolean", default: false, required: false, hint: "Affiche le badge « Halal » sur la fiche" }
+      - { label: "Casher", name: "kasher", widget: "boolean", default: false, required: false, hint: "Affiche le badge « Casher » sur la fiche" }
+      - label: "Profil aromatique"
+        name: "profil"
+        widget: "list"
+        hint: "2 à 3 mots-clés courts, ex : « Intensité forte », « Fumé, chaud »"
+        fields:
+          - { label: "Mot-clé", name: "label", widget: "string" }
+      - label: "Formats"
+        name: "formats"
+        widget: "list"
+        hint: "Pas de prix affiché sur le site (catalogue sur devis)"
+        fields:
+          - { label: "Poids", name: "poids", widget: "string", hint: "Ex : 100 g" }
+          - { label: "Format proposé par défaut sur la fiche", name: "defaut", widget: "boolean", default: false, required: false }
+
+  - name: "presentoirs"
+    label: "Présentoirs"
+    label_singular: "présentoir"
+    folder: "data/presentoirs"
+    extension: "json"
+    format: "json"
+    create: true
+    delete: true
+    identifier_field: nom
+    slug: "{{slug}}"
+    summary: "{{nom}}"
+    media_folder: "/assets/img/presentoirs"
+    public_folder: "/assets/img/presentoirs"
+    fields:
+      - { label: "Nom du présentoir", name: "nom", widget: "string", hint: "Ex : Présentoir 46 épices" }
+      - { label: "Capacité (nombre d'épices)", name: "capacite", widget: "number", value_type: "int" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Photo", name: "image", widget: "image", required: false }

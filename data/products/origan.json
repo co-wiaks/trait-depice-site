@@ -1,0 +1,39 @@
+{
+  "slug": "origan",
+  "nom": "Origan",
+  "famille": "Herbes",
+  "familleSlug": "herbes",
+  "origine": "Turquie",
+  "bg": "#EAEBDF",
+  "dot": "#7C8A54",
+  "description": "Un origan sec et parfumé, indispensable des cuisines méditerranéennes, sur pizzas, sauces tomate et grillades.",
+  "profil": [
+    {
+      "label": "Intensité moyenne"
+    },
+    {
+      "label": "Herbacé, poivré"
+    },
+    {
+      "label": "Origine Turquie"
+    }
+  ],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ],
+  "image": "",
+  "halal": false,
+  "kasher": false
+}

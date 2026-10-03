@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Trait d'Épice</title>
+<meta name="description" content="Contactez Trait d'Épice — questions, commandes, devis professionnels et points de vente.">
+<link rel="icon" href="assets/img/favicon.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <a href="index.html" class="brand-lockup">
+        <img src="assets/img/icon-light.png" alt="" class="brand-icon" style="height:54px;width:auto;">
+        <span class="tagline-wrap"><span class="name">TRAIT D'ÉPICE</span><span class="tagline">VOYAGE · SAVEURS · PASSION</span></span>
+      </a>
+      <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="nos-epices.html">Nos Épices</a>
+      <a href="recettes.html">Recettes</a>
+      <a href="notre-histoire.html">Notre Histoire</a>
+      <a href="professionnels.html">Professionnels</a>
+      </nav>
+      <div class="header-actions">
+        <a href="contact.html" class="btn btn-dark">Contact</a>
+        <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+<div class="mobile-nav">
+    <a href="index.html">Accueil</a>
+    <a href="nos-epices.html">Nos Épices</a>
+    <a href="recettes.html">Recettes</a>
+    <a href="notre-histoire.html">Notre Histoire</a>
+    <a href="professionnels.html">Professionnels</a>
+    <a href="contact.html" class="btn btn-dark btn-block">Contact</a>
+  </div>
+<main>
+<section class="section tight" style="padding-bottom:36px;">
+  <div class="container">
+    <span class="eyebrow">Contact</span>
+    <h1 style="font-size:42px;margin-top:10px;">Parlons-en</h1>
+    <p style="margin-top:14px;font-size:14px;color:var(--gray);max-width:560px;">Une question sur nos épices, une commande, une demande professionnelle&nbsp;? Écrivez-nous, nous revenons vers vous sous 48h.</p>
+  </div>
+</section>
+
+<section class="section" style="background:var(--ink);">
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow on-dark">Formulaire</span>
+    <form class="form-grid dark-form" style="margin-top:22px;" data-mailto="contact@traitdepice.fr" data-subject="Message depuis le site — Trait d'Épice">
+      <div class="field">
+        <label for="c-etablissement">Établissement</label>
+        <input id="c-etablissement" name="Établissement" type="text" placeholder="Nom (facultatif pour un particulier)">
+      </div>
+      <div class="field">
+        <label for="c-type">Type d'activité</label>
+        <select id="c-type" name="Type d'activité">
+          <option>Particulier</option>
+          <option>Restaurant</option>
+          <option>Épicerie fine</option>
+          <option>Grossiste</option>
+          <option>Distributeur</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="c-email">E-mail</label>
+        <input id="c-email" name="E-mail" type="email" placeholder="vous@exemple.fr" required>
+      </div>
+      <div class="field">
+        <label for="c-tel">Téléphone</label>
+        <input id="c-tel" name="Téléphone" type="tel" placeholder="06 00 00 00 00">
+      </div>
+      <div class="field full">
+        <label for="c-sujet">Sujet</label>
+        <input id="c-sujet" name="Sujet" type="text" placeholder="Objet du message">
+      </div>
+      <div class="field full">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" name="Message" rows="5" placeholder="Votre message" required></textarea>
+      </div>
+      <div class="field full">
+        <button type="submit" class="btn btn-gold" style="width:fit-content;">Envoyer</button>
+        <p class="form-status"></p>
+        <p class="form-note" style="color:#B9B2A7;">En V1, l'envoi ouvre votre messagerie avec le message pré-rempli.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+<footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="assets/img/icon-dark.png" alt="" class="brand-icon" style="height:40px;width:auto;">
+          <span>TRAIT D'ÉPICE</span>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <span class="head">Boutique</span>
+            <a href="nos-epices.html">Nos épices</a>
+            <a href="recettes.html">Recettes</a>
+          </div>
+          <div class="footer-col">
+            <span class="head">Marque</span>
+            <a href="notre-histoire.html">Notre histoire</a>
+            <a href="professionnels.html">Professionnels</a>
+          </div>
+          <div class="footer-col">
+            <span class="head">Contact</span>
+            <span>Carré Primeur — 94360 Fresnes</span>
+            <span>contact@traitdepice.fr</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Trait d'Épice — Tous droits réservés</span>
+        <span>Origine Espagne · Sélection artisanale</span>
+      </div>
+    </div>
+  </footer>
+<script src="assets/js/main.js"></script>
+<script>
+// Termine la connexion (invitation / mot de passe oublié) puis renvoie vers /admin/.
+// Sans effet tant que l'identité Netlify n'est pas configurée sur l'hébergement.
+if (window.netlifyIdentity) {
+  window.netlifyIdentity.on('init', function (user) {
+    if (!user) {
+      window.netlifyIdentity.on('login', function () {
+        document.location.href = 'admin/';
+      });
+    }
+  });
+}
+</script>
+</body>
+</html>

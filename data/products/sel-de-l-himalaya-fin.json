@@ -1,0 +1,26 @@
+{
+  "nom": "Sel de l'Himalaya fin",
+  "famille": "Sel & Condiments",
+  "origine": "",
+  "description": "Un sel sélectionné pour sa pureté, à utiliser pour assaisonner ou finir vos plats.",
+  "image": "",
+  "dot": "#C9C5BC",
+  "halal": false,
+  "kasher": false,
+  "profil": [],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ]
+}

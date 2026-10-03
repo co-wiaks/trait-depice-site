@@ -1,0 +1,39 @@
+{
+  "slug": "paprika-fume",
+  "nom": "Paprika Fumé",
+  "famille": "Épices douces",
+  "familleSlug": "epices-douces",
+  "origine": "Espagne",
+  "bg": "#F6E9D8",
+  "dot": "#C9642A",
+  "description": "Un paprika fumé au bois de chêne, à la robe profonde et au parfum envoûtant. Il transforme un plat simple en plat de caractère.",
+  "profil": [
+    {
+      "label": "Intensité douce"
+    },
+    {
+      "label": "Fumé"
+    },
+    {
+      "label": "Origine Espagne"
+    }
+  ],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ],
+  "image": "",
+  "halal": false,
+  "kasher": false
+}

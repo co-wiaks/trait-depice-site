@@ -1,0 +1,39 @@
+{
+  "slug": "herbes-de-provence",
+  "nom": "Herbes de Provence",
+  "famille": "Herbes",
+  "familleSlug": "herbes",
+  "origine": "France",
+  "bg": "#EAEBDF",
+  "dot": "#6E7A4A",
+  "description": "Le mélange emblématique de thym, romarin, origan et sarriette. Un classique pour grillades, légumes et marinades.",
+  "profil": [
+    {
+      "label": "Intensité douce"
+    },
+    {
+      "label": "Herbacé"
+    },
+    {
+      "label": "Origine France"
+    }
+  ],
+  "formats": [
+    {
+      "poids": "100 g"
+    },
+    {
+      "poids": "200 g"
+    },
+    {
+      "poids": "500 g",
+      "defaut": true
+    },
+    {
+      "poids": "1 kg"
+    }
+  ],
+  "image": "",
+  "halal": false,
+  "kasher": false
+}
