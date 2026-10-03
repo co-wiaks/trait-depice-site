@@ -1,5 +1,5 @@
 // ===========================================================
-// TRAIT D'ÉPICE — script principal (site statique, sans dépendance)
+// TRAIT D'ÉPICE — script principal
 // ===========================================================
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ---------- Filtres + recherche catalogue (page Nos épices) ---------- */
+  /* ---------- Filtres + recherche catalogue ---------- */
   var pills = document.querySelectorAll('.filter-pill');
   var cards = document.querySelectorAll('[data-famille]');
   var searchInput = document.getElementById('epice-search');
@@ -52,11 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-  if (searchInput) {
-    searchInput.addEventListener('input', applyFilters);
-  }
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
 
-  /* ---------- Sélecteur de formats (fiche produit) ---------- */
+  /* ---------- Sélecteur de formats ---------- */
   var formatButtons = document.querySelectorAll('.fmt');
   if (formatButtons.length) {
     formatButtons.forEach(function (btn) {
@@ -68,30 +66,64 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ---------- Formulaires (Contact / Professionnels) ---------- */
-  // V1 sans back-end : le formulaire compose un e-mail (mailto) avec les
-  // informations saisies. À terme, remplacer ce comportement par un vrai
-  // envoi serveur (voir README.md du site, section "Formulaires").
-  document.querySelectorAll('form[data-mailto]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var to = form.getAttribute('data-mailto');
-      var subject = form.getAttribute('data-subject') || 'Nouveau message — Trait d\'Épice';
-      var lines = [];
-      form.querySelectorAll('input, select, textarea').forEach(function (field) {
-        if (!field.name) return;
-        var label = field.closest('.field') ? field.closest('.field').querySelector('label') : null;
-        var labelText = label ? label.textContent : field.name;
-        lines.push(labelText + ' : ' + (field.value || '—'));
-      });
-      var body = encodeURIComponent(lines.join('\n'));
-      var mailtoUrl = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + body;
-      window.location.href = mailtoUrl;
+  /* ---------- Formulaire de contact réel ---------- */
+  var CONTACT_ENDPOINT = 'https://mpzisuzeyqooxdqcfrpr.supabase.co/functions/v1/contact-submit';
 
+  document.querySelectorAll('form[data-contact-form]').forEach(function (form) {
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var button = form.querySelector('button[type="submit"]');
       var status = form.querySelector('.form-status');
+      var formData = new FormData(form);
+
+      // Honeypot anti-spam : un humain ne voit jamais ce champ.
+      if ((formData.get('website') || '').toString().trim()) return;
+
+      var payload = {
+        name: (formData.get('name') || '').toString().trim(),
+        company: (formData.get('company') || '').toString().trim(),
+        email: (formData.get('email') || '').toString().trim(),
+        phone: (formData.get('phone') || '').toString().trim(),
+        subject: (formData.get('subject') || '').toString().trim(),
+        message: (formData.get('message') || '').toString().trim()
+      };
+
+      if (!payload.name || !payload.email || !payload.message) {
+        if (status) status.textContent = 'Merci de renseigner votre nom, votre e-mail et votre message.';
+        return;
+      }
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Envoi…';
+      }
       if (status) {
-        status.classList.add('ok');
-        status.textContent = 'Votre messagerie va s\'ouvrir avec le message pré-rempli. Il ne reste qu\'à l\'envoyer.';
+        status.classList.remove('ok');
+        status.textContent = '';
+      }
+
+      try {
+        var response = await fetch(CONTACT_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        var result = await response.json().catch(function () { return {}; });
+        if (!response.ok) throw new Error(result.error || 'Envoi impossible');
+
+        form.reset();
+        if (status) {
+          status.classList.add('ok');
+          status.textContent = 'Merci. Votre demande a bien été envoyée.';
+        }
+      } catch (err) {
+        if (status) status.textContent = 'Un problème est survenu pendant l’envoi. Réessayez dans quelques instants.';
+        console.error(err);
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Envoyer';
+        }
       }
     });
   });
