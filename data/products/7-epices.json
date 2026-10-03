@@ -4,7 +4,11 @@
   "famille": "Mélanges",
   "kasher": true,
   "image": "/assets/img/produits/quatres-épices_100g.png",
-  "profil": [],
+  "profil": [
+    {
+      "label": "Qualité"
+    }
+  ],
   "formats": [
     {
       "poids": "100 g"
@@ -20,7 +24,7 @@
       "poids": "1 kg"
     }
   ],
-  "description": "Un mélange d'épices équilibré, prêt à l'emploi pour relever vos recettes.",
+  "description": "Un mélange d'épices équilibré, prêt à l'emploi pour relever vos recettes. EEE",
   "halal": true,
   "origine": "ESPAGNE"
 }
