@@ -4,6 +4,7 @@ let supabase = null;
 let currentUser = null;
 let families = [];
 let spices = [];
+let messages = [];
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -28,35 +29,57 @@ function showApp() {
   $('#appView').classList.remove('hidden');
 }
 
+async function isCurrentUserAdmin() {
+  const { data, error } = await supabase
+    .from('admin_users')
+    .select('user_id')
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+  return !error && Boolean(data);
+}
+
 async function init() {
   if (!configReady) return showLogin();
-  supabase = window.supabase.createClient(cfg.url, cfg.publishableKey);
-  const { data } = await supabase.auth.getSession();
-  currentUser = data.session?.user || null;
-  if (!currentUser) return showLogin();
-  const { data: isAdminData, error } = await supabase.rpc('is_admin');
-  if (error || !isAdminData) {
+  supabase = window.supabase.createClient(cfg.url, cfg.publishableKey, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) return showLogin();
+  currentUser = user;
+
+  if (!(await isCurrentUserAdmin())) {
     await supabase.auth.signOut();
     return showLogin('Ce compte n’est pas autorisé à accéder à l’administration.');
   }
+
   showApp();
   await refreshAll();
 }
 
 async function refreshAll() {
-  const [{ data: f }, { data: s }, { count: messageCount }] = await Promise.all([
+  const [familyRes, spiceRes, messageRes] = await Promise.all([
     supabase.from('families').select('*').order('display_order').order('name'),
     supabase.from('spices').select('*, families(name)').order('name'),
-    supabase.from('contact_requests').select('*', { count: 'exact', head: true }).eq('status','new')
+    supabase.from('contact_requests').select('*').order('created_at', { ascending: false }).limit(200)
   ]);
-  families = f || [];
-  spices = s || [];
+
+  if (familyRes.error) console.error(familyRes.error);
+  if (spiceRes.error) console.error(spiceRes.error);
+  if (messageRes.error) console.error(messageRes.error);
+
+  families = familyRes.data || [];
+  spices = spiceRes.data || [];
+  messages = messageRes.data || [];
+
   $('#metricSpices').textContent = spices.length;
   $('#metricFamilies').textContent = families.length;
-  $('#metricMessages').textContent = messageCount || 0;
+  $('#metricMessages').textContent = messages.filter(x => x.status === 'new').length;
   $('#metricMissingImages').textContent = spices.filter(x => !x.main_image_url).length;
+
   renderSpices();
   renderFamilies();
+  renderMessages();
   fillFamilySelect();
 }
 
@@ -76,6 +99,20 @@ function renderSpices() {
 function renderFamilies() {
   $('#familyRows').innerHTML = families.map(f => `
     <tr><td><strong>${esc(f.name)}</strong></td><td>${esc(f.slug)}</td><td>${f.display_order}</td><td><span class="badge ${f.is_active?'ok':'off'}">${f.is_active?'Active':'Masquée'}</span></td><td class="actions"><button onclick="editFamily('${f.id}')">Modifier</button></td></tr>`).join('') || '<tr><td colspan="5" class="muted">Aucune famille</td></tr>';
+}
+
+function renderMessages() {
+  $('#messageRows').innerHTML = messages.map(m => {
+    const date = new Date(m.created_at).toLocaleString('fr-FR');
+    const label = ({new:'Nouveau',in_progress:'En traitement',done:'Traité',archived:'Archivé'})[m.status] || m.status;
+    return `<tr>
+      <td>${esc(date)}</td>
+      <td><strong>${esc(m.name)}</strong><br><span class="muted">${esc(m.company || m.email)}</span></td>
+      <td>${esc(m.subject || 'Sans sujet')}</td>
+      <td><span class="badge ${m.status === 'new' ? 'ok' : 'off'}">${esc(label)}</span></td>
+      <td class="actions"><button onclick="openMessage('${m.id}')">Ouvrir</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" class="muted">Aucune demande reçue</td></tr>';
 }
 
 function fillFamilySelect() {
@@ -108,32 +145,165 @@ function switchView(name) {
 function openModal(id){$(id).classList.remove('hidden')}
 function closeModal(id){$(id).classList.add('hidden')}
 
-function newSpice(){
-  $('#spiceForm').reset(); $('#spiceId').value=''; $('#spicePublished').checked=true; $('#spiceColor').value='#C9A66B'; openModal('#spiceModal');
+function updatePreview(url) {
+  const img = $('#spicePreview');
+  if (url) { img.src = url; img.style.display = 'block'; }
+  else { img.removeAttribute('src'); img.style.display = 'none'; }
 }
+
+function newSpice(){
+  $('#spiceForm').reset();
+  $('#spiceId').value='';
+  $('#spicePublished').checked=true;
+  $('#spiceColor').value='#C9A66B';
+  updatePreview('');
+  openModal('#spiceModal');
+}
+
 function editSpice(id){
   const s=spices.find(x=>x.id===id); if(!s)return;
-  $('#spiceId').value=s.id; $('#spiceName').value=s.name||''; $('#spiceSlug').value=s.slug||''; $('#spiceFamily').value=s.family_id||''; $('#spiceOrigin').value=s.origin||''; $('#spiceDescription').value=s.description||''; $('#spiceImage').value=s.main_image_url||''; $('#spiceColor').value=s.accent_color||'#C9A66B'; $('#spicePublished').checked=!!s.is_published; openModal('#spiceModal');
+  $('#spiceId').value=s.id;
+  $('#spiceName').value=s.name||'';
+  $('#spiceSlug').value=s.slug||'';
+  $('#spiceFamily').value=s.family_id||'';
+  $('#spiceOrigin').value=s.origin||'';
+  $('#spiceDescription').value=s.description||'';
+  $('#spiceImage').value=s.main_image_url||'';
+  $('#spiceImageFile').value='';
+  $('#spiceColor').value=s.accent_color||'#C9A66B';
+  $('#spicePublished').checked=!!s.is_published;
+  updatePreview(s.main_image_url || '');
+  openModal('#spiceModal');
 }
+
+async function uploadSpiceImage(file, slug) {
+  if (!file) return null;
+  if (file.size > 5 * 1024 * 1024) throw new Error('La photo dépasse 5 Mo.');
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Format non autorisé. Utilise JPG, PNG ou WebP.');
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const safeSlug = slugify(slug || 'epice');
+  const path = `${safeSlug}/${Date.now()}.${ext}`;
+  const { error } = await supabase.storage.from('spices').upload(path, file, { cacheControl:'3600', upsert:false, contentType:file.type });
+  if (error) throw error;
+  const { data } = supabase.storage.from('spices').getPublicUrl(path);
+  return data.publicUrl;
+}
+
 async function saveSpice(e){
   e.preventDefault();
-  const id=$('#spiceId').value;
-  const payload={name:$('#spiceName').value.trim(),slug:$('#spiceSlug').value.trim()||slugify($('#spiceName').value),family_id:$('#spiceFamily').value||null,origin:$('#spiceOrigin').value.trim(),description:$('#spiceDescription').value.trim(),main_image_url:$('#spiceImage').value.trim(),accent_color:$('#spiceColor').value,is_published:$('#spicePublished').checked};
-  const q=id?supabase.from('spices').update(payload).eq('id',id):supabase.from('spices').insert(payload);
-  const {error}=await q; if(error)return alert(error.message); closeModal('#spiceModal'); await refreshAll();
-}
-async function toggleSpice(id,value){const {error}=await supabase.from('spices').update({is_published:value}).eq('id',id);if(error)return alert(error.message);await refreshAll();}
+  const button = $('#spiceSaveButton');
+  button.disabled = true;
+  button.textContent = 'Enregistrement…';
+  try {
+    const id=$('#spiceId').value;
+    const name=$('#spiceName').value.trim();
+    const slug=$('#spiceSlug').value.trim()||slugify(name);
+    let imageUrl=$('#spiceImage').value.trim() || null;
+    const file=$('#spiceImageFile').files?.[0];
+    if (file) imageUrl = await uploadSpiceImage(file, slug);
 
-function newFamily(){ $('#familyForm').reset(); $('#familyId').value=''; $('#familyActive').checked=true; openModal('#familyModal'); }
-function editFamily(id){const f=families.find(x=>x.id===id);if(!f)return;$('#familyId').value=f.id;$('#familyName').value=f.name||'';$('#familySlug').value=f.slug||'';$('#familyDescription').value=f.description||'';$('#familyOrder').value=f.display_order||0;$('#familyActive').checked=!!f.is_active;openModal('#familyModal');}
-async function saveFamily(e){e.preventDefault();const id=$('#familyId').value;const payload={name:$('#familyName').value.trim(),slug:$('#familySlug').value.trim()||slugify($('#familyName').value),description:$('#familyDescription').value.trim(),display_order:Number($('#familyOrder').value||0),is_active:$('#familyActive').checked};const q=id?supabase.from('families').update(payload).eq('id',id):supabase.from('families').insert(payload);const {error}=await q;if(error)return alert(error.message);closeModal('#familyModal');await refreshAll();}
+    const payload={
+      name,
+      slug,
+      family_id:$('#spiceFamily').value||null,
+      origin:$('#spiceOrigin').value.trim(),
+      description:$('#spiceDescription').value.trim(),
+      main_image_url:imageUrl,
+      accent_color:$('#spiceColor').value,
+      is_published:$('#spicePublished').checked,
+      updated_at:new Date().toISOString()
+    };
+
+    const q=id?supabase.from('spices').update(payload).eq('id',id):supabase.from('spices').insert(payload);
+    const {error}=await q;
+    if(error) throw error;
+    closeModal('#spiceModal');
+    await refreshAll();
+  } catch (err) {
+    alert(err.message || 'Erreur lors de l’enregistrement.');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Enregistrer';
+  }
+}
+
+async function toggleSpice(id,value){
+  const {error}=await supabase.from('spices').update({is_published:value,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error)return alert(error.message);
+  await refreshAll();
+}
+
+function newFamily(){
+  $('#familyForm').reset();
+  $('#familyId').value='';
+  $('#familyActive').checked=true;
+  openModal('#familyModal');
+}
+
+function editFamily(id){
+  const f=families.find(x=>x.id===id);if(!f)return;
+  $('#familyId').value=f.id;
+  $('#familyName').value=f.name||'';
+  $('#familySlug').value=f.slug||'';
+  $('#familyDescription').value=f.description||'';
+  $('#familyOrder').value=f.display_order||0;
+  $('#familyActive').checked=!!f.is_active;
+  openModal('#familyModal');
+}
+
+async function saveFamily(e){
+  e.preventDefault();
+  const id=$('#familyId').value;
+  const payload={
+    name:$('#familyName').value.trim(),
+    slug:$('#familySlug').value.trim()||slugify($('#familyName').value),
+    description:$('#familyDescription').value.trim(),
+    display_order:Number($('#familyOrder').value||0),
+    is_active:$('#familyActive').checked,
+    updated_at:new Date().toISOString()
+  };
+  const q=id?supabase.from('families').update(payload).eq('id',id):supabase.from('families').insert(payload);
+  const {error}=await q;
+  if(error)return alert(error.message);
+  closeModal('#familyModal');
+  await refreshAll();
+}
+
+function openMessage(id) {
+  const m = messages.find(x => x.id === id); if (!m) return;
+  const statuses = [
+    ['new','Nouveau'],['in_progress','En traitement'],['done','Traité'],['archived','Archivé']
+  ];
+  $('#messageDetail').innerHTML = `
+    <p><strong>${esc(m.name)}</strong>${m.company ? ` — ${esc(m.company)}` : ''}</p>
+    <p><a href="mailto:${esc(m.email)}">${esc(m.email)}</a>${m.phone ? ` · ${esc(m.phone)}` : ''}</p>
+    <p><strong>${esc(m.subject || 'Sans sujet')}</strong></p>
+    <p style="white-space:pre-wrap;line-height:1.7">${esc(m.message)}</p>
+    <label>Statut<select id="messageStatus">${statuses.map(([v,l]) => `<option value="${v}" ${m.status===v?'selected':''}>${l}</option>`).join('')}</select></label>
+    <p><button class="btn btn-primary" onclick="saveMessageStatus('${m.id}')">Enregistrer le statut</button></p>`;
+  openModal('#messageModal');
+}
+
+async function saveMessageStatus(id) {
+  const status = $('#messageStatus').value;
+  const { error } = await supabase.from('contact_requests').update({ status }).eq('id', id);
+  if (error) return alert(error.message);
+  closeModal('#messageModal');
+  await refreshAll();
+}
 
 $('#loginForm').addEventListener('submit', login);
 $('#spiceForm').addEventListener('submit', saveSpice);
 $('#familyForm').addEventListener('submit', saveFamily);
 $('#spiceName').addEventListener('input',()=>{if(!$('#spiceId').value)$('#spiceSlug').value=slugify($('#spiceName').value)});
 $('#familyName').addEventListener('input',()=>{if(!$('#familyId').value)$('#familySlug').value=slugify($('#familyName').value)});
+$('#spiceImage').addEventListener('input',()=>updatePreview($('#spiceImage').value.trim()));
+$('#spiceImageFile').addEventListener('change',()=>{
+  const file=$('#spiceImageFile').files?.[0];
+  if(file) updatePreview(URL.createObjectURL(file));
+});
 $('#spiceSearch').addEventListener('input',renderSpices);
 $$('.nav button[data-view]').forEach(btn=>btn.addEventListener('click',()=>switchView(btn.dataset.view)));
-window.newSpice=newSpice;window.editSpice=editSpice;window.toggleSpice=toggleSpice;window.newFamily=newFamily;window.editFamily=editFamily;window.closeModal=closeModal;window.logout=logout;
+
+Object.assign(window,{newSpice,editSpice,toggleSpice,newFamily,editFamily,closeModal,logout,openMessage,saveMessageStatus,refreshAll});
 init();
